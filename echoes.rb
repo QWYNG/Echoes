@@ -14,8 +14,6 @@ result = {}
 
 playlists.each do |playlist|
   tracks = spotify_client.get_tracks_from_playlist(playlist)
-
-
   tracks[:items].each do |item|
     100.downto(90).each do |popularity|
       case item
