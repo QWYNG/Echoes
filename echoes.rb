@@ -5,6 +5,7 @@ require 'dotenv/load'
 require 'base64'
 require 'json'
 require 'base64'
+require "awesome_print"
 
 class SpotifyClient
   attr_reader :access_token
@@ -26,6 +27,12 @@ class SpotifyClient
 
     JSON.parse(response.body, symbolize_names: true)[:playlists][:items]
   end
+
+  def get_tracks_from_playlist(playlist)
+    response = RestClient.get(playlist[:href], Authorization: "Bearer #{@access_token}")
+
+    JSON.parse(response.body, symbolize_names: true)[:tracks]
+  end
 end
 
 spotify_client = SpotifyClient.new(ENV['ClIENT_ID'], ENV['ClIENT_SECRET'])
@@ -35,14 +42,21 @@ search_word = gets.chomp
 
 playlists = spotify_client.search_playlist(search_word)
 
+result = {}
+
 playlists.each do |playlist|
-  response = RestClient.get(playlist[:href], Authorization: "Bearer #{spotify_client.access_token}").body
-  JSON.parse(response, symbolize_names: true)[:tracks][:items].each do |item|
-    case item
-    in { track:  { album: { name: name }, popularity: 100 } }
-      puts name
-    else
-      next
+  tracks = spotify_client.get_tracks_from_playlist(playlist)
+
+
+  tracks[:items].each do |item|
+    100.downto(90).each do |popularity|
+      case item
+      in { track:  { name: name, popularity: ^popularity } }
+        result[name] = popularity
+      else
+        next
+      end
     end
   end
 end
+ap result, options = { color: { hash: :green } }
