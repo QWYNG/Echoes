@@ -1,4 +1,5 @@
 require 'dotenv/load'
+require "awesome_print"
 require './spotify_client'
 
 spotify_client = SpotifyClient.new(ENV['ClIENT_ID'], ENV['ClIENT_SECRET'])
@@ -13,8 +14,6 @@ result = {}
 
 playlists.each do |playlist|
   tracks = spotify_client.get_tracks_from_playlist(playlist)
-
-
   tracks[:items].each do |item|
     100.downto(90).each do |popularity|
       case item
