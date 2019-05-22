@@ -6,7 +6,7 @@ This is a script that search for Spotify playlists with freewords and pick only 
 using 2.7.0.dev pattern match
 
 
-##Usage
+## Usage
 Set env as below
 
 ```:env
