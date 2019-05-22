@@ -1,5 +1,4 @@
 require 'dotenv/load'
-require "awesome_print"
 require './spotify_client'
 
 spotify_client = SpotifyClient.new(ENV['ClIENT_ID'], ENV['ClIENT_SECRET'])
@@ -28,4 +27,4 @@ playlists.each do |playlist|
   end
 end
 
-ap result, options = { color: { hash: :green } }
+pp result
