@@ -15,13 +15,11 @@ result = {}
 playlists.each do |playlist|
   tracks = spotify_client.get_tracks_from_playlist(playlist)
   tracks[:items].each do |item|
-    100.downto(90).each do |popularity|
-      case item
-      in { track:  { name: name, popularity: ^popularity } }
-        result[name] = popularity
-      else
-        next
-      end
+    case item
+    in { track:  { name: name, popularity: 90..100 => popularity } }
+      result[name] = popularity
+    else
+      next
     end
   end
 end
