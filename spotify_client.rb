@@ -23,6 +23,22 @@ class SpotifyClient
     JSON.parse(response.body, symbolize_names: true)[:playlists][:items]
   end
 
+  def get_high_popularity_tracks(playlists)
+    playlists.each_with_object({}) do |playlist, result_tracks|
+      tracks = get_tracks_from_playlist(playlist)
+      tracks[:items].each do |item|
+        case item
+        in { track:  { name: name, popularity: 90..100 => popularity } }
+        result_tracks[name] = popularity
+        else
+          next
+        end
+      end
+    end
+  end
+
+  private
+
   def get_tracks_from_playlist(playlist)
     response = RestClient.get(playlist[:href], Authorization: "Bearer #{@access_token}")
 
