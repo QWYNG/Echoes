@@ -6,11 +6,13 @@ GEM
     coderay (1.1.2)
     declarative (0.0.10)
     declarative-option (0.1.0)
+    diff-lcs (1.3)
     domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.2)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
+    ffi (1.11.1)
     google-api-client (0.30.2)
       addressable (~> 2.5, >= 2.5.1)
       googleauth (>= 0.5, < 0.10.0)
@@ -38,6 +40,8 @@ GEM
     mini_mime (1.0.1)
     multi_json (1.13.1)
     multipart-post (2.1.1)
+    natto (1.1.2)
+      ffi (>= 1.9.0)
     netrc (0.11.0)
     os (1.0.1)
     pry (0.12.2)
@@ -53,6 +57,19 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     retriable (3.1.2)
+    rspec (3.8.0)
+      rspec-core (~> 3.8.0)
+      rspec-expectations (~> 3.8.0)
+      rspec-mocks (~> 3.8.0)
+    rspec-core (3.8.0)
+      rspec-support (~> 3.8.0)
+    rspec-expectations (3.8.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.8.0)
+    rspec-mocks (3.8.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.8.0)
+    rspec-support (3.8.0)
     signet (0.11.0)
       addressable (~> 2.3)
       faraday (~> 0.9)
@@ -69,8 +86,10 @@ PLATFORMS
 DEPENDENCIES
   dotenv
   google-api-client (~> 0.11)
+  natto
   pry
   rest-client
+  rspec
 
 BUNDLED WITH
    2.1.0.pre.1
