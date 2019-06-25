@@ -1,16 +1,28 @@
 require 'dotenv/load'
-require "awesome_print"
-require './spotify_client'
+require_relative 'spotify_client'
+require_relative 'youtube_likes_videos_getter'
+require_relative 'natto_ranker'
 
-spotify_client = SpotifyClient.new(ENV['ClIENT_ID'], ENV['ClIENT_SECRET'])
 
-puts 'Input Genre or Mood!'
-search_word = gets.chomp
+class Echoes
+  class << self
+    def run
+      puts 'Getting your Youtube likes...'
 
-puts 'searching now…'
+      likes_videos_getter = YoutubeLikesVideosGetter.new
+      likes_videos_getter.get_likes_list!
 
-playlists = spotify_client.search_playlist(search_word)
+      natto_ranker = NattoRanker.new(likes_videos_getter.titles)
 
-result = spotify_client.get_high_popularity_tracks(playlists)
+      spotify_client = SpotifyClient.new(ENV['ClIENT_ID'], ENV['ClIENT_SECRET'])
 
-pp result
+      puts "search spotify with #{natto_ranker.ranking.first[0]}"
+      playlists = spotify_client.search_playlist(natto_ranker.ranking.first[0])
+      result = spotify_client.get_high_popularity_tracks(playlists)
+
+      pp result
+    end
+  end
+end
+
+Echoes.run
