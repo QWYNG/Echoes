@@ -5,7 +5,9 @@ require 'json'
 class SpotifyClient
   attr_reader :access_token
 
-  def initialize(client_id, client_secret)
+  def initialize
+    client_id = ENV['SPOTIFY_ClIENT_ID']
+    client_secret = ENV['SPOTIFY_ClIENT_SECRET']
     base64id = Base64.strict_encode64("#{client_id}:#{client_secret}")
 
     r = RestClient.post('https://accounts.spotify.com/api/token',
