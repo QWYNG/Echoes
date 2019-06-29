@@ -6,23 +6,14 @@ require_relative 'natto_ranker'
 
 class Echoes
   class << self
-    def run
-      puts 'Getting your Youtube likes...'
-
-      likes_videos_getter = YoutubeLikesVideosGetter.new
+    def run(request)
+      credentials_request = request.env['omniauth.auth']['credentials']
+      likes_videos_getter = YoutubeLikesVideosGetter.new(credentials_request)
       likes_videos_getter.get_likes_list!
-
       natto_ranker = NattoRanker.new(likes_videos_getter.titles)
-
       spotify_client = SpotifyClient.new(ENV['ClIENT_ID'], ENV['ClIENT_SECRET'])
-
-      puts "search spotify with #{natto_ranker.ranking.first[0]}"
       playlists = spotify_client.search_playlist(natto_ranker.ranking.first[0])
-      result = spotify_client.get_high_popularity_tracks(playlists)
-
-      pp result
+      spotify_client.get_high_popularity_tracks(playlists)
     end
   end
 end
-
-Echoes.run

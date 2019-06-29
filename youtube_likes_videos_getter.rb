@@ -12,17 +12,13 @@ require 'pry'
 class YoutubeLikesVideosGetter
   attr_accessor :titles
 
-  REDIRECT_URI = 'http://localhost'
-  APPLICATION_NAME = 'YouTube Data API Ruby Tests'
-  CLIENT_SECRETS_PATH = 'client_secret.json'
-  CREDENTIALS_PATH = File.join(Dir.home, '.credentials', "youtube-quickstart-ruby-credentials.yaml")
-  SCOPE = Google::Apis::YoutubeV3::AUTH_YOUTUBE_READONLY
+  APPLICATION_NAME = 'Echoes'
 
-  def initialize
+  def initialize(credentials_request)
     @titles = ''
     @service = Google::Apis::YoutubeV3::YouTubeService.new
     @service.client_options.application_name = APPLICATION_NAME
-    @service.authorization = authorize
+    @service.authorization = create_credentials(credentials_request)
   end
 
   def get_likes_list!
@@ -37,23 +33,13 @@ class YoutubeLikesVideosGetter
 
   private
 
-  def authorize
-    FileUtils.mkdir_p(File.dirname(CREDENTIALS_PATH))
-
-    client_id = Google::Auth::ClientId.from_file(CLIENT_SECRETS_PATH)
-    token_store = Google::Auth::Stores::FileTokenStore.new(file: CREDENTIALS_PATH)
-    authorizer = Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
-    user_id = 'default'
-    credentials = authorizer.get_credentials(user_id)
-    if credentials.nil?
-      url = authorizer.get_authorization_url(base_url: REDIRECT_URI)
-      puts "Open the following URL in the browser and enter the " +
-               "resulting code after authorization"
-      puts url
-      code = gets
-      credentials = authorizer.get_and_store_credentials_from_code(
-          user_id: user_id, code: code, base_url: REDIRECT_URI)
-    end
-    credentials
+  def create_credentials(credentials_request)
+    Google::Auth::UserRefreshCredentials.new(
+        client_id:     ENV['GOOGLE_KEY'],
+        client_secret: ENV['GOOGLE_SECRET'],
+        access_token:  credentials_request["token"],
+        refresh_token: credentials_request["refresh_token"],
+        expires_at:    credentials_request["expires_at"]
+    )
   end
 end
