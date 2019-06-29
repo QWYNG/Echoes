@@ -30,7 +30,7 @@ class SpotifyClient
       tracks = get_tracks_from_playlist(playlist)
       tracks[:items].each do |item|
         case item
-        in { track:  { name: name, popularity: 90..100 => popularity } }
+        in { track:  { name: name, popularity: 80..100 => popularity } }
         result_tracks[name] = popularity
         else
           next

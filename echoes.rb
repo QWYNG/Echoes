@@ -13,7 +13,7 @@ class Echoes
       natto_ranker = NattoRanker.new(likes_videos_getter.titles)
       spotify_client = SpotifyClient.new
       playlists = spotify_client.search_playlist(natto_ranker.ranking.first[0])
-      spotify_client.get_high_popularity_tracks(playlists)
+      spotify_client.get_high_popularity_tracks(playlists).first(10)
     end
   end
 end
