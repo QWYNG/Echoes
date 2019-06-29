@@ -5,7 +5,6 @@ require 'omniauth'
 require 'omniauth-google-oauth2'
 require 'dotenv/load'
 require_relative 'echoes'
-require 'pry'
 
 class App < Sinatra::Base
   get '/' do
