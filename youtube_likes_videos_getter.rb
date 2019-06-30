@@ -3,11 +3,7 @@ gem 'google-api-client', '>0.7'
 require 'google/apis'
 require 'google/apis/youtube_v3'
 require 'googleauth'
-require 'googleauth/stores/file_token_store'
-
-require 'fileutils'
 require 'json'
-require 'pry'
 
 class YoutubeLikesVideosGetter
   attr_accessor :titles
@@ -19,6 +15,20 @@ class YoutubeLikesVideosGetter
     @service = Google::Apis::YoutubeV3::YouTubeService.new
     @service.client_options.application_name = APPLICATION_NAME
     @service.authorization = create_credentials(credentials_request)
+    get_likes_list!
+  end
+
+  private
+
+  def create_credentials(credentials_request)
+    credentials_info = credentials_request.env['omniauth.auth']['credentials']
+    Google::Auth::UserRefreshCredentials.new(
+        client_id:     ENV['GOOGLE_KEY'],
+        client_secret: ENV['GOOGLE_SECRET'],
+        access_token:  credentials_info["token"],
+        refresh_token: credentials_info["refresh_token"],
+        expires_at:    credentials_info["expires_at"]
+    )
   end
 
   def get_likes_list!
@@ -29,17 +39,5 @@ class YoutubeLikesVideosGetter
     responce_json['items'].each do |item|
       @titles << item["snippet"]["title"]
     end
-  end
-
-  private
-
-  def create_credentials(credentials_request)
-    Google::Auth::UserRefreshCredentials.new(
-        client_id:     ENV['GOOGLE_KEY'],
-        client_secret: ENV['GOOGLE_SECRET'],
-        access_token:  credentials_request["token"],
-        refresh_token: credentials_request["refresh_token"],
-        expires_at:    credentials_request["expires_at"]
-    )
   end
 end
