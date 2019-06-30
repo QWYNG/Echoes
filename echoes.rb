@@ -1,7 +1,7 @@
 require 'dotenv/load'
-require_relative 'spotify_client'
-require_relative 'youtube_likes_videos_getter'
-require_relative 'natto_ranker'
+require_relative 'lib/natto_ranker'
+require_relative 'lib/spotify_client'
+require_relative 'lib/youtube_likes_videos_getter'
 
 
 class Echoes
