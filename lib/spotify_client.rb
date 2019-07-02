@@ -1,9 +1,11 @@
 require 'rest-client'
 require 'base64'
 require 'json'
+require_relative 'spotify_track'
 
 class SpotifyClient
   attr_reader :access_token
+
 
   def initialize
     client_id = ENV['SPOTIFY_ClIENT_ID']
@@ -22,16 +24,22 @@ class SpotifyClient
                               Authorization: "Bearer #{@access_token}",
                               params: { q: search_word, type: :playlist, limit: 50 })
 
-    JSON.parse(response.body, symbolize_names: true)[:playlists][:items]
+      JSON.parse(response.body, symbolize_names: true)[:playlists][:items]
+  end
+
+  class Array
+    def deconstruct
+      self
+    end
   end
 
   def get_high_popularity_tracks(playlists)
-    playlists.each_with_object({}) do |playlist, result_tracks|
+    playlists.each_with_object([]) do |playlist, result_tracks|
       tracks = get_tracks_from_playlist(playlist)
-      tracks[:items].each do |item|
-        case item
-        in { track:  { name: name, popularity: 80..100 => popularity } }
-        result_tracks[name] = popularity
+      tracks.each do |track|
+        case track
+        in { track:  { album: { images: [_, { height: 300, url: image_url, width: 300 }, _] }, name: name, popularity: 80..100 => popularity } }
+          result_tracks << SpotifyTrack.new(name, popularity, image_url)
         else
           next
         end
@@ -44,6 +52,6 @@ class SpotifyClient
   def get_tracks_from_playlist(playlist)
     response = RestClient.get(playlist[:href], Authorization: "Bearer #{@access_token}")
 
-    JSON.parse(response.body, symbolize_names: true)[:tracks]
+    JSON.parse(response.body, symbolize_names: true)[:tracks][:items]
   end
 end
