@@ -22,8 +22,8 @@ class App < Sinatra::Base
   end
 
   get '/auth/:provider/callback' do
-    content_type 'text/plain'
-    ::Echoes.run(request).inspect
+    @result_tracks = ::Echoes.run(request)
+    slim :result_tracks
   end
 
   get '/auth/failure' do

@@ -1,0 +1,10 @@
+doctype html
+html
+  head
+    title Echoes
+  body
+    - @result_tracks.each do |result_track|
+      h3 = result_track.name
+      p = result_track.popularity
+      p = result_track.popularity_comment
+      img src="#{result_track.image_url}"
