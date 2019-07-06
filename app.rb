@@ -16,6 +16,7 @@ class App < Sinatra::Base
       </head>
       <body>
         <a href='/auth/google_oauth2'>Sign in with Google</a>
+        <a href='/policy'> policy </a>
       </body>
     </html>
     HTML
@@ -29,5 +30,9 @@ class App < Sinatra::Base
   get '/auth/failure' do
     content_type 'text/plain'
     'Some Error'
+  end
+
+  get '/policy' do
+    slim :policy
   end
 end
